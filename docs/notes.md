@@ -1,0 +1,16 @@
+# Notes
+
+[Installation - Material UI](https://mui.com/material-ui/getting-started/installation/)
+
+```bash
+pnpm add @mui/material @emotion/react @emotion/styled
+pnpm add @fontsource/roboto
+
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+pnpm add @mui/icons-material
+
+```
