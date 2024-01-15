@@ -1,5 +1,7 @@
 # Notes
 
+[React Hook Form Validation with Complete Examples | refine](https://refine.dev/blog/react-hook-form-validation-examples/#handling-errors)
+
 [Installation - Material UI](https://mui.com/material-ui/getting-started/installation/)
 
 ```bash
