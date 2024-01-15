@@ -13,4 +13,7 @@ import '@fontsource/roboto/700.css';
 
 pnpm add @mui/icons-material
 
+pnpm add react-router-dom
+pnpm add  react-hook-form
+pnpm i @hookform/resolvers yup
 ```

@@ -7,7 +7,10 @@ import {
   Select,
   TextField,
 } from '@mui/material'
+import { SyntheticEvent } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 interface FieldType {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,9 +22,9 @@ interface IFormValue {
   lastname: string
   address: string
   number: number
-  work: string
-  company: string
-  role: string
+  work?: string
+  company?: string
+  role?: string
 }
 
 const defaultValues = {
@@ -34,36 +37,61 @@ const defaultValues = {
   role: '',
 }
 
+const schema = yup.object().shape({
+  firstname: yup.string().label('First Name').trim().required().min(3).max(64),
+  lastname: yup.string().label('Last Name').trim().required().min(3).max(64),
+  address: yup.string().label('Address').trim().required().min(3),
+  number: yup.number().label('Number').required(),
+  work: yup.string().label('Work').oneOf(['unemployed', 'employed']),
+  company: yup.string().when('work', ([work], schema) => {
+    if (work === 'employed') {
+      return schema.required().min(3).max(64)
+    }
+    return schema.notRequired()
+  }),
+  role: yup.string().when('work', ([work], schema) => {
+    if (work === 'employed') {
+      return schema.required().min(3).max(64)
+    }
+    return schema.notRequired()
+  }),
+})
+
 const CreateForm = () => {
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<IFormValue>({
+  const { control, handleSubmit, watch, formState } = useForm<IFormValue>({
     mode: 'onChange',
     defaultValues,
+    resolver: yupResolver(schema),
   })
-  const handleSubmission = (data: IFormValue) => console.log(data)
+
+  const work = watch('work')
+  console.log('work', work)
+
+  const { errors } = formState
+  const handleSubmission = (event: SyntheticEvent<HTMLFormElement>): void => {
+    event.preventDefault()
+    console.log('formState.isValid', formState.isValid)
+  }
 
   return (
     <Container maxWidth='md'>
-      <form style={{ display: 'flex', flexDirection: 'column' }}>
+      <form
+        style={{ display: 'flex', flexDirection: 'column' }}
+        onSubmit={handleSubmission}
+      >
         <Controller
           control={control}
           name='firstname'
-          rules={{ required: true, minLength: 5 }}
+          //   rules={{ required: true, minLength: 5 }}
           render={({ field }: FieldType) => (
             <TextField
               {...field}
-              error={errors.firstname ? true : false}
+              error={!!errors.firstname}
               fullWidth
               sx={{ maxWidth: 600 }}
               label='First Name'
               margin='dense'
-              helperText={
-                errors.firstname && 'You need to enter at least 5 characters!'
-              }
+              helperText={errors.firstname && `${errors.firstname?.message}`}
             />
           )}
         />
@@ -132,32 +160,41 @@ const CreateForm = () => {
             )}
           />
         </FormControl>
-        <Controller
-          control={control}
-          name='company'
-          render={({ field }: FieldType) => (
-            <TextField
-              {...field}
-              fullWidth
-              sx={{ maxWidth: 600 }}
-              label='Company'
-              margin='dense'
+
+        {work === 'employed' && (
+          <>
+            <Controller
+              control={control}
+              name='company'
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  sx={{ maxWidth: 600 }}
+                  label='Company'
+                  margin='dense'
+                  error={!!errors.company}
+                  helperText={errors.company && `${errors.company.message}`}
+                />
+              )}
             />
-          )}
-        />
-        <Controller
-          control={control}
-          name='role'
-          render={({ field }: FieldType) => (
-            <TextField
-              {...field}
-              fullWidth
-              sx={{ maxWidth: 600 }}
-              label='Role'
-              margin='dense'
+            <Controller
+              control={control}
+              name='role'
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  fullWidth
+                  sx={{ maxWidth: 600 }}
+                  label='Role'
+                  margin='dense'
+                  error={!!errors.role}
+                  helperText={errors.role && `${errors.role.message}`}
+                />
+              )}
             />
-          )}
-        />
+          </>
+        )}
         <Button
           type='submit'
           variant='contained'
