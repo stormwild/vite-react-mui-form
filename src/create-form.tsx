@@ -7,15 +7,14 @@ import {
   Select,
   TextField,
 } from '@mui/material'
-import { SyntheticEvent } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-interface FieldType {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field: any
-}
+// interface FieldType {
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   field: any
+// }
 
 interface IFormValue {
   firstname: string
@@ -65,32 +64,30 @@ const CreateForm = () => {
   })
 
   const work = watch('work')
-  console.log('work', work)
+  //   console.log('work', work)
 
   const { errors } = formState
-  const handleSubmission = (event: SyntheticEvent<HTMLFormElement>): void => {
-    event.preventDefault()
-    console.log('formState.isValid', formState.isValid)
-  }
+  const handleSubmission = (data: IFormValue) =>
+    console.log('handleSubmission:data', data)
 
   return (
     <Container maxWidth='md'>
       <form
         style={{ display: 'flex', flexDirection: 'column' }}
-        onSubmit={handleSubmission}
+        onSubmit={handleSubmit(handleSubmission)}
       >
         <Controller
           control={control}
           name='firstname'
           //   rules={{ required: true, minLength: 5 }}
-          render={({ field }: FieldType) => (
+          render={({ field }) => (
             <TextField
               {...field}
-              error={!!errors.firstname}
               fullWidth
               sx={{ maxWidth: 600 }}
               label='First Name'
               margin='dense'
+              error={!!errors.firstname}
               helperText={errors.firstname && `${errors.firstname?.message}`}
             />
           )}
@@ -103,7 +100,7 @@ const CreateForm = () => {
         <Controller
           control={control}
           name='lastname'
-          render={({ field }: FieldType) => (
+          render={({ field }) => (
             <TextField
               {...field}
               fullWidth
@@ -116,7 +113,7 @@ const CreateForm = () => {
         <Controller
           control={control}
           name='address'
-          render={({ field }: FieldType) => (
+          render={({ field }) => (
             <TextField
               {...field}
               fullWidth
@@ -129,7 +126,7 @@ const CreateForm = () => {
         <Controller
           control={control}
           name='number'
-          render={({ field }: FieldType) => (
+          render={({ field }) => (
             <TextField
               {...field}
               fullWidth
@@ -145,7 +142,7 @@ const CreateForm = () => {
           <Controller
             control={control}
             name='work'
-            render={({ field }: FieldType) => (
+            render={({ field }) => (
               <Select
                 sx={{ maxWidth: 600 }}
                 margin='dense'
