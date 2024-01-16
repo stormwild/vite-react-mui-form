@@ -5,6 +5,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Stack,
   TextField,
 } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
@@ -71,143 +72,115 @@ const CreateForm = () => {
     console.log('handleSubmission:data', data)
 
   return (
-    <Container maxWidth='md'>
-      <form
-        style={{ display: 'flex', flexDirection: 'column' }}
-        onSubmit={handleSubmit(handleSubmission)}
-      >
+    <Stack component='form' onSubmit={handleSubmit(handleSubmission)}>
+      <Controller
+        control={control}
+        name='firstname'
+        //   rules={{ required: true, minLength: 5 }}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            fullWidth
+            label='First Name'
+            margin='dense'
+            error={!!errors.firstname}
+            helperText={errors.firstname && `${errors.firstname?.message}`}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name='lastname'
+        render={({ field }) => (
+          <TextField {...field} fullWidth label='Last Name' margin='dense' />
+        )}
+      />
+      <Controller
+        control={control}
+        name='address'
+        render={({ field }) => (
+          <TextField {...field} fullWidth label='Address' margin='dense' />
+        )}
+      />
+      <Controller
+        control={control}
+        name='number'
+        render={({ field }) => (
+          <TextField
+            {...field}
+            fullWidth
+            label='Number'
+            margin='dense'
+            type='number'
+          />
+        )}
+      />
+      <FormControl sx={{ marginTop: 1, marginBottom: 0.7 }}>
+        <InputLabel id='type-label'>Work</InputLabel>
         <Controller
           control={control}
-          name='firstname'
-          //   rules={{ required: true, minLength: 5 }}
+          name='work'
           render={({ field }) => (
-            <TextField
-              {...field}
-              fullWidth
-              sx={{ maxWidth: 600 }}
-              label='First Name'
+            <Select
               margin='dense'
-              error={!!errors.firstname}
-              helperText={errors.firstname && `${errors.firstname?.message}`}
-            />
+              {...field}
+              type='select'
+              labelId='type-label'
+              label='Work'
+            >
+              <MenuItem value='employed'>Employed</MenuItem>
+              <MenuItem value='unemployed'>Unemployed</MenuItem>
+            </Select>
           )}
         />
-        {/* {errors.firstname && (
-            <span style={{ color: 'red' }}>
-              You need to enter at least 5 characters!
-            </span>
-          )} */}
-        <Controller
-          control={control}
-          name='lastname'
-          render={({ field }) => (
-            <TextField
-              {...field}
-              fullWidth
-              sx={{ maxWidth: 600 }}
-              label='Last Name'
-              margin='dense'
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name='address'
-          render={({ field }) => (
-            <TextField
-              {...field}
-              fullWidth
-              sx={{ maxWidth: 600 }}
-              label='Address'
-              margin='dense'
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name='number'
-          render={({ field }) => (
-            <TextField
-              {...field}
-              fullWidth
-              sx={{ maxWidth: 600 }}
-              label='Number'
-              margin='dense'
-              type='number'
-            />
-          )}
-        />
-        <FormControl sx={{ marginTop: 1, marginBottom: 0.7 }}>
-          <InputLabel id='type-label'>Work</InputLabel>
+      </FormControl>
+
+      {work === 'employed' && (
+        <>
           <Controller
             control={control}
-            name='work'
+            name='company'
             render={({ field }) => (
-              <Select
-                sx={{ maxWidth: 600 }}
-                margin='dense'
+              <TextField
                 {...field}
-                type='select'
-                labelId='type-label'
-                label='Work'
-              >
-                <MenuItem value='employed'>Employed</MenuItem>
-                <MenuItem value='unemployed'>Unemployed</MenuItem>
-              </Select>
+                fullWidth
+                label='Company'
+                margin='dense'
+                error={!!errors.company}
+                helperText={errors.company && `${errors.company.message}`}
+              />
             )}
           />
-        </FormControl>
-
-        {work === 'employed' && (
-          <>
-            <Controller
-              control={control}
-              name='company'
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  sx={{ maxWidth: 600 }}
-                  label='Company'
-                  margin='dense'
-                  error={!!errors.company}
-                  helperText={errors.company && `${errors.company.message}`}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name='role'
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  sx={{ maxWidth: 600 }}
-                  label='Role'
-                  margin='dense'
-                  error={!!errors.role}
-                  helperText={errors.role && `${errors.role.message}`}
-                />
-              )}
-            />
-          </>
-        )}
-        <Button
-          type='submit'
-          variant='contained'
-          fullWidth
-          sx={{
-            maxWidth: '600px',
-            padding: '10px',
-            backgroundColor: '#67BE23',
-            color: 'white',
-            marginTop: '5px',
-          }}
-        >
-          Submit
-        </Button>
-      </form>
-    </Container>
+          <Controller
+            control={control}
+            name='role'
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                label='Role'
+                margin='dense'
+                error={!!errors.role}
+                helperText={errors.role && `${errors.role.message}`}
+              />
+            )}
+          />
+        </>
+      )}
+      <Button
+        type='submit'
+        variant='contained'
+        fullWidth
+        sx={{
+          padding: '10px',
+          backgroundColor: '#67BE23',
+          color: 'white',
+          marginTop: '5px',
+        }}
+      >
+        Submit
+      </Button>
+    </Stack>
   )
 }
 

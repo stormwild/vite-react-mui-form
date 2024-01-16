@@ -44,8 +44,25 @@ function Copyright() {
 const Create = () => {
   console.log('App')
   return (
-    <Container maxWidth='sm'>
-      <Box sx={{ my: 4 }}>
+    <Container
+      sx={
+        {
+          // marginTop: '64px',
+          // height: '100vh'
+        }
+      } // Adjust the height as needed
+    >
+      <Box
+        display='flex'
+        flexDirection='column'
+        justifyContent='space-evenly'
+        alignItems='center'
+        // sx={{
+        //   my: 4,
+        //   margin: '0 auto',
+        //   textAlign: 'center',
+        // }}
+      >
         <Typography variant='h4' component='h1' gutterBottom>
           Material UI Vite.js example in TypeScript
         </Typography>
